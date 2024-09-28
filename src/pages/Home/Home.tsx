@@ -1,10 +1,23 @@
 
-export default function Home() {
+import Banner from "./Banner";
+import ExtraSection from "./ExtraSection";
+import FeaturedFacility from "./FeaturedFacility";
+import RoadMap from "./RoadMap/RoadMap";
+import Testimonials from "./Testimonials";
+
+
+
+const Home = () => {
   return (
-    <div className="mx-auto container">
-    
-   
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+    <div>
+      <Banner />
+      <FeaturedFacility />
+      <RoadMap />
+      <Testimonials />
+      <ExtraSection />
+
     </div>
   );
-}
+};
+
+export default Home;
