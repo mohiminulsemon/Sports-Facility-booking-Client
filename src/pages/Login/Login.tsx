@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 const Login = () => {
     const [addUsersLogin] = useAddUsersLoginMutation();
     const [uploading, setUploading] = useState(false);
+   
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: "",
@@ -34,9 +35,11 @@ const Login = () => {
 
         try {
             const result = await addUsersLogin(loginData).unwrap();
-            console.log("Login successful: ", result);
+            const token = localStorage.setItem("token", result.token);
+            const id = localStorage.setItem("id", result.data._id);
+            console.log("Login successful: ", result, token, id);
             toast.success("Login successful");
-            navigate("/userdashboard");
+            navigate("/dashboard");
         } catch (err) {
             console.error("Login failed: ", err);
             toast.error("Login failed");
