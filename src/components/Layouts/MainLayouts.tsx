@@ -1,4 +1,4 @@
-// import Footer from "@/pages/shared/Footer";
+import Footer from "@/pages/shared/Footer";
 import Navbar from "@/pages/shared/Navbar";
 import { Outlet } from "react-router-dom";
 
@@ -7,7 +7,7 @@ const MainLayout = () => {
     <div className="bg-[#000924] ">
       <Navbar />
       <Outlet ></Outlet>
-      {/* <Footer></Footer> */}
+      <Footer ></Footer>
     </div>
   );
 };
