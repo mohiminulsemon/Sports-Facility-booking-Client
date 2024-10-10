@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link, useNavigate } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_upload_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
-const Registration = () => {
+const AddAdmin = () => {
     const [addUsersSignup] = useAddUsersSignupMutation();
     const [formData, setFormData] = useState({
         name: "",
@@ -63,18 +63,6 @@ const Registration = () => {
         e.preventDefault();
         setUploading(true);
 
-        if (formData.phone.length !== 11) {
-            toast.error("Phone number must be 11 digits");
-            setUploading(false);
-            return;
-        }
-
-        if(formData.password.length < 8) {
-            toast.error("Password must be at least 8 characters");
-            setUploading(false);
-            return;
-        }
-
         let imageUrl = "";
         if (formData.imageFile) {
             imageUrl = await uploadImageToImgbb(formData.imageFile);
@@ -91,34 +79,31 @@ const Registration = () => {
             phone: formData.phone,
             address: formData.address,
             image: imageUrl,
-            role: "user",
+            role: "admin",
         };
 
         try {
             const result = await addUsersSignup(signupData).unwrap();
-            console.log("Registration successful: ", result);
-            toast.success("Registration successful");
-            navigate("/login");
+            console.log("Admin Add successful: ", result);
+            toast.success("Admin added successful");
+            navigate("/dashboard/allusers");
+
         } catch (err) {
-            console.error("Registration failed: ", err);
-            toast.error("Registration failed");
+            console.error("Admin Add failed: ", err);
+            toast.error("Admin Add failed");
         } finally {
             setUploading(false);
         }
     };
 
     return (
-        <div className="bg-[#000924] h-screen flex flex-col justify-center   py-10">
-            <Link to="/">
-                <div className="flex justify-center items-center gap-2">
-                    <FaHome className="text-[#42f5f5] text-3xl" />
-                    <h1 className="text-[#42f5f5] underline underline-offset-4">Back to <span className="text-white">Home</span></h1>
-                </div>
-            </Link>
-            <div className=" flex justify-center items-center  py-10">
-                <Card className="w-[350px] md:w-[600px] bg-transparent md:backdrop-blur-md">
+        <div className="bg-[#000924] h-screen flex flex-col justify-center   pb-10">
+
+            <div className=" flex justify-center items-center ">
+                <Card className="w-[350px] md:w-[600px] bg-transparent md:backdrop-blur-md border border-[#000924]">
                     <CardHeader>
-                        <CardTitle className="text-[#42f5f5] text-center text-3xl">Registration</CardTitle>
+                        <CardTitle className="text-[#42f5f5] text-center text-3xl">Add <span className="text-white">Admin</span></CardTitle>
+                        <hr className="border-2 border-[#42f5f5] w-5/12 md:w-1/12 mx-auto mb-2" />
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit}>
@@ -203,15 +188,11 @@ const Registration = () => {
 
                             </div>
                             <CardFooter className="flex flex-col space-y-3 mt-4">
-                                <Button type="submit" className="bg-[#102e46] text-[#42f5f5] hover:bg-[#42f5f5] hover:text-[#102e46] md:px-64 my-2" disabled={uploading}>
-                                    {uploading ? "Submitting..." : "Submit"}
+                                <Button type="submit" className="bg-[#102e46] text-[#42f5f5] hover:bg-[#42f5f5] hover:text-[#102e46] md:px-60 my-2" disabled={uploading}>
+                                    {uploading ? "Adding Admin..." : "Add Admin"}
                                 </Button>
                             </CardFooter>
-                            <CardFooter className="flex flex-col space-y-1 ">
-                                <h1 className="text-[#42f5f5]">Have an account?
-                                    <small className="ml-2 underline"><Link to="/login">Login</Link></small>
-                                </h1>
-                            </CardFooter>
+
                         </form>
                     </CardContent>
                 </Card>
@@ -220,4 +201,4 @@ const Registration = () => {
     );
 };
 
-export default Registration;
+export default AddAdmin;

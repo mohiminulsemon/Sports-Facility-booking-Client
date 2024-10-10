@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+
 // Define the base API for the sports facility booking platform
 export const baseApi = createApi({
   reducerPath: "baseApi",
@@ -17,7 +18,7 @@ export const baseApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["auth", "facilities", "bookings"],
+  tagTypes: ["auth", "facility", "bookings"],
   endpoints: (builder) => ({
     addUsersSignup: builder.mutation({
       query: (data) => ({
@@ -43,11 +44,18 @@ export const baseApi = createApi({
     }),
     getUserProfile: builder.query({
       query: (data) => (
-      // console.log({ data }),  
-      {
+        // console.log({ data }),  
+        {
+          method: "GET",
+          url: `/auth/profile/${data?.id}`,
+        }),
+      providesTags: ["auth"],
+    }),
+    getAllUser: builder.query({
+      query: () => ({
         method: "GET",
-        url: `/auth/profile/${data?.id}`, 
-      }),      
+        url: "/auth/allUsers",
+      }),
       providesTags: ["auth"],
     }),
 
@@ -73,65 +81,67 @@ export const baseApi = createApi({
     }),
     addFacility: builder.mutation({
       query: (data) => ({
-        url: "/facilities",
+        url: "/facility",
         method: "POST",
         body: data,
         headers: {
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["facilities"],
+      invalidatesTags: ["facility"],
     }),
 
     getAllFacilities: builder.query({
       query: (data) => (
-        console.log( data ),
-      {
+        console.log(data),
+        {
+          url: "/facility",
+          method: "GET",
+        }),
+      providesTags: ["facility"],
+    }),
+
+    getAllFacilitiesPage: builder.query({
+      query: () => ({
         url: "/facility",
         method: "GET",
       }),
-      providesTags: ["facilities"],
-    }),
-    // Get all facilities with pagination
-    getAllFacilitiesPage: builder.query({
-      query: ({ page = 1, limit = 10 }) => ({
-        url: `/facilities?page=${page}&limit=${limit}`,
-        method: "GET",
-      }),
-      providesTags: ["facilities"],
+      providesTags: ["facility"],
     }),
 
-    // Get a single facility by ID
+  
     getSingleFacility: builder.query({
-      query: (id) => ({
-        url: `/facilities/${id}`,
-        method: "GET",
-      }),
-      providesTags: ["facilities"],
+      query: ({ id }) => (
+        console.log({ id }),
+        {
+          url: `/facility/${id}`,
+          method: "GET",
+        }),
+      providesTags: ["facility"],
     }),
 
-    // Update a facility by ID (Admin only)
+   
     updateFacility: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/facilities/${id}`,
+        url: `/facility/${id}`,
         method: "PUT",
         body: data,
         headers: {
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["facilities"],
+      invalidatesTags: ["facility"],
     }),
 
-    // Soft delete a facility by ID (Admin only)
+  
     deleteFacility: builder.mutation({
       query: (id) => ({
-        url: `/facilities/${id}`,
+        url: `/facility/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["facilities"],
+      invalidatesTags: ["facility"],
     }),
-    // Create a booking
+
     addBooking: builder.mutation({
       query: (data) => ({
         url: "/bookings",
@@ -144,10 +154,12 @@ export const baseApi = createApi({
       invalidatesTags: ["bookings"],
     }),
 
-    // Check facility availability
+    
     checkAvailability: builder.query({
-      query: (date) => ({
-        url: `/bookings/check-availability?date=${date}`,
+      query: (date) => (
+        console.log({ date }),
+      {
+        url: `/check-availability?date=${date}`,
         method: "GET",
       }),
       providesTags: ["bookings"],
@@ -188,6 +200,7 @@ export const {
   useAddUsersSignupMutation,
   useAddUsersLoginMutation,
   useGetUserProfileQuery,
+  useGetAllUserQuery,
   useAddUserLogoutMutation,
   useUpdateUserProfileMutation,
   useAddFacilityMutation,

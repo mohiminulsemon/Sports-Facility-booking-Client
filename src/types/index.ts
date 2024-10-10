@@ -15,7 +15,7 @@ export type TFacility = {
   _id: string;               
   name: string;            
   description: string;       
-  imageUrl?: string;         
+  imageUrl: string;         
   pricePerHour: number;      
   location: string;          
   isDeleted?: boolean;       
@@ -27,8 +27,8 @@ export type TBooking = {
   date: string;
   startTime: string;
   endTime: string;
-  user: TUsers | string;  
-  facility: TFacility | string; 
+  user: TUsers ;  
+  facility: TFacility ; 
   payableAmount: number;
   isBooked: "confirmed" | "canceled";
   createdAt: string;
